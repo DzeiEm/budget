@@ -3,4 +3,4 @@ localStorage.setItem('userName', userNameValue)
 
 export const fetchData = (key) => {
     return localStorage.getItem(key)
-}
+  }

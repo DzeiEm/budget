@@ -1,33 +1,60 @@
 import React from 'react'
 import { fetchData } from '../helpers'
-import illustration from '../assets/illustration.jpg'
+import Intro from '../components/Intro'
 
 const Dashboard = () => {
   const userName = fetchData('userName')
 
-  const createAccount = () => {
+  const createBudget = (event) => {
+    event.preventDefault()
+    // id, name, amount, color
+    const id = crypto.randomUUID()
+    const amount = event.target.elements.amount.valueAsNumber
+    const name = event.target.elements.name.value
+    const color = 'red'
 
+    const budget = {
+      id: id,
+      amount: amount,
+      name: name,
+      color: color,
+    }
+
+    const existingBudgets = JSON.parse(fetchData('budgets')) ?? []
+    localStorage.setItem('budgets', JSON.stringify([...existingBudgets, budget]))
+
+    console.log(budget)
   }
 
   return (<>
       { userName
         ? <div className="dashboard">
           <h2>Welcome, {userName}</h2>
-        </div>
-        : <div className="intro">
-          <div>
-            <h1>Take Control of <span className="accent">Your Money</span></h1>
-            <p>Personal budgeting is the secret to financial freedom. Start your journey today.</p>
-            <form onSubmit={createAccount}>
-              <input type="text" placeholder="What is your name?" />
-              <button className="btn btn--dark">
-                <span>Create Account</span>
-                <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 16 16" height="1em" width="1em"><path fillRule="evenodd" d="M11 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM1.022 13h9.956a.274.274 0 00.014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 00.022.004zm9.974.056v-.002.002zM6 7a2 2 0 100-4 2 2 0 000 4zm3-2a3 3 0 11-6 0 3 3 0 016 0zm4.5 0a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13V5.5a.5.5 0 01.5-.5z" clipRule="evenodd" /><path fillRule="evenodd" d="M13 7.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z" clipRule="evenodd" /></svg>
-              </button>
-            </form>
+          <p>Personal budgeting is the secret to financial freedom.</p>
+          <p>Create a budget to get started!</p>
+          <div className="grid-lg">
+            <div className="flex-lg">
+              <div className="form-wrapper">
+                <h2 className="h3">Create budget</h2>
+                <form onSubmit={createBudget} className="grid-sm">
+                  <div className="grid-xs">
+                    <label htmlFor="name">Budget name</label>
+                    <input name="name" id="name" placeholder="e.g., Groceries" required />
+                  </div>
+                  <div className="grid-xs">
+                    <label htmlFor="amount">Amount</label>
+                    <input name="amount" id="amount" type="number" placeholder="e.g., 350€" required />
+                  </div>
+                  <button className="btn btn--dark">
+                    <span>Create budget</span>
+                      <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 1024 1024" height="1em" width="1em"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372zm117.7-588.6c-15.9-3.5-34.4-5.4-55.3-5.4-106.7 0-178.9 55.7-198.6 149.9H344c-4.4 0-8 3.6-8 8v27.2c0 4.4 3.6 8 8 8h26.4c-.3 4.1-.3 8.4-.3 12.8v36.9H344c-4.4 0-8 3.6-8 8V568c0 4.4 3.6 8 8 8h30.2c17.2 99.2 90.4 158 200.2 158 20.9 0 39.4-1.7 55.3-5.1 3.7-.8 6.4-4 6.4-7.8v-42.8c0-5-4.6-8.8-9.5-7.8-14.7 2.8-31.9 4.1-51.8 4.1-68.5 0-114.5-36.6-129.8-98.6h130.6c4.4 0 8-3.6 8-8v-27.2c0-4.4-3.6-8-8-8H439.2v-36c0-4.7 0-9.4.3-13.8h135.9c4.4 0 8-3.6 8-8v-27.2c0-4.4-3.6-8-8-8H447.1c17.2-56.9 62.3-90.4 127.6-90.4 19.9 0 37.1 1.5 51.7 4.4a8 8 0 0 0 9.6-7.8v-42.8c0-3.8-2.6-7-6.3-7.8z" /></svg>
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
-          <img src={illustration} alt="" />
         </div>
+        : <Intro />
       }
     </>
   )
